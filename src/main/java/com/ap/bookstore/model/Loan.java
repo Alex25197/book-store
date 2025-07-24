@@ -14,13 +14,11 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference(value = "user-loans")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_loans_user"))
     private User user;
 
-    @JsonBackReference(value = "book-loans")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", nullable = false, foreignKey = @ForeignKey(name = "fk_loans_book"))
     private Book book;
 

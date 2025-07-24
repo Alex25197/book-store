@@ -71,4 +71,9 @@ public class LoanService {
         return loanRepository.findByUserAndReturnedFalse(user)
             .orElseThrow(() -> new ResourceNotFoundException("Active loan", "userId", userId));
     }
+
+    public Loan getLoanById(Long id) {
+        return loanRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Loan", "id", id));
+    }
 } 

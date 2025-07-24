@@ -68,4 +68,19 @@ public class LoanController {
     ) {
         return ResponseEntity.ok(loanService.getActiveLoanByUser(userId));
     }
+
+    @Operation(
+        summary = "Get loan by ID",
+        description = "Returns a loan and its associated book information based on the loan ID"
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Loan found successfully"),
+        @ApiResponse(responseCode = "404", description = "Loan not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<Loan> getLoanById(
+        @Parameter(description = "ID of the loan to retrieve") @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(loanService.getLoanById(id));
+    }
 } 
