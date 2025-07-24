@@ -1,6 +1,7 @@
 package com.ap.bookstore.controller;
 
 import com.ap.bookstore.model.Loan;
+import com.ap.bookstore.model.LoanDTO;
 import com.ap.bookstore.service.LoanService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -78,9 +79,10 @@ public class LoanController {
         @ApiResponse(responseCode = "404", description = "Loan not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Loan> getLoanById(
+    public ResponseEntity<LoanDTO> getLoanById(
         @Parameter(description = "ID of the loan to retrieve") @PathVariable Long id
     ) {
-        return ResponseEntity.ok(loanService.getLoanById(id));
+        Loan loan = loanService.getLoanById(id);
+        return ResponseEntity.ok(LoanDTO.fromLoan(loan));
     }
 } 
