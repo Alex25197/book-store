@@ -1,6 +1,7 @@
 package com.ap.bookstore.controller;
 
 import com.ap.bookstore.model.User;
+import com.ap.bookstore.model.UserDTO;
 import com.ap.bookstore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,12 +11,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "User", description = "User management APIs")
 public class UserController {
     
@@ -30,9 +33,9 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "User created successfully"),
         @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
+        return ResponseEntity.ok(UserDTO.fromUser(userService.createUser(user)));
     }
     
     @Operation(
@@ -44,10 +47,10 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<UserDTO> getUserById(
         @Parameter(description = "ID of the user to retrieve") @PathVariable Long id
     ) {
-        return ResponseEntity.ok(userService.getUserById(id));
+        return ResponseEntity.ok(UserDTO.fromUser(userService.getUserById(id)));
     }
     
     @Operation(
@@ -58,8 +61,11 @@ public class UserController {
         @ApiResponse(responseCode = "200", description = "List of users retrieved successfully")
     })
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers().stream()
+            .map(UserDTO::fromUser)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(users);
     }
     
     @Operation(

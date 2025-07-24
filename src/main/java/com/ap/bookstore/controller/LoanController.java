@@ -11,11 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/loans")
+@RequestMapping(value = "/api/loans", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Loan", description = "Loan management APIs")
 public class LoanController {
     
@@ -31,7 +32,7 @@ public class LoanController {
         @ApiResponse(responseCode = "400", description = "Invalid input or user already has an active loan"),
         @ApiResponse(responseCode = "404", description = "User or book not found")
     })
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Loan> createLoan(
         @Parameter(description = "ID of the user borrowing the book") @RequestParam Long userId,
         @Parameter(description = "ID of the book being borrowed") @RequestParam Long bookId
@@ -78,7 +79,7 @@ public class LoanController {
         @ApiResponse(responseCode = "200", description = "Loan found successfully"),
         @ApiResponse(responseCode = "404", description = "Loan not found")
     })
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoanDTO> getLoanById(
         @Parameter(description = "ID of the loan to retrieve") @PathVariable Long id
     ) {
